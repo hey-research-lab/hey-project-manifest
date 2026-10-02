@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/hey-research-lab/hey-project-manifest/main/schema/hey-project.v1.json",
+  "title": "HEY project manifest, version 1 (/.well-known/hey-project.json)",
+  "description": "A first-party declaration a Robinhood Chain project publishes about itself. DECLARED is not VERIFIED: a valid manifest does not prove that the publisher owns the listed contracts or repositories, who the builder is, which token is the project's, or that the project is legitimate. This schema is the structural subset of the v1 rules; the reference validator (@hey-research-lab/project-manifest) also checks EIP-55 checksums, duplicates after normalisation, and text and URL rules a pattern cannot express.",
+  "type": "object",
+  "required": ["version", "name", "website", "chainId"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/hey-research-lab/hey-project-manifest/main/schema/hey-project.v1.json",
+      "description": "Optional editor hint. When present it must be this schema's $id."
+    },
+    "version": {
+      "const": 1,
+      "description": "The manifest format version."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^\\S(.*\\S)?$",
+      "description": "The project's name as it presents itself."
+    },
+    "website": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "The project's website: the site that serves this manifest."
+    },
+    "chainId": {
+      "const": 4663,
+      "description": "Robinhood Chain (eip155:4663), the only chain a v1 manifest declares. There is no chains[] list."
+    },
+    "repositories": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/httpsUrl"
+          },
+          {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "^[hH][tT][tT][pP][sS]://([wW][wW][wW]\\.)?[gG][iI][tT][hH][uU][bB]\\.[cC][oO][mM]\\.?(:[0-9]+)?([/?#]|$)"
+                }
+              },
+              {
+                "pattern": "^[hH][tT][tT][pP][sS]://([wW][wW][wW]\\.)?[gG][iI][tT][hH][uU][bB]\\.[cC][oO][mM]/[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}/?$"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "Source repositories the project declares as its own. A GitHub repository is https://github.com/<owner>/<repo>. Duplicates are compared after canonicalisation (lowercase, no .git, no trailing slash)."
+    },
+    "contracts": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/contract"
+      },
+      "description": "Contracts the project declares on Robinhood Chain. Each address at most once (compared in lowercase)."
+    },
+    "documentation": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "Developer or user documentation."
+    },
+    "changelog": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "A human-readable changelog."
+    },
+    "feed": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "An RSS, Atom or JSON feed of the project's updates."
+    },
+    "officialX": {
+      "type": "string",
+      "maxLength": 500,
+      "pattern": "^[hH][tT][tT][pP][sS]://([wW][wW][wW]\\.|[mM][oO][bB][iI][lL][eE]\\.)?([xX]|[tT][wW][iI][tT][tT][eE][rR])\\.[cC][oO][mM]/[A-Za-z0-9_]{1,15}/?([?#][!-~]*)?$",
+      "description": "The project's X profile URL, https://x.com/<handle>."
+    },
+    "logo": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "A logo image URL."
+    },
+    "release": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+/-]*$",
+      "description": "The release (tag or version) the declared contracts correspond to. A rolling tag (latest, nightly, edge…) is accepted with a warning."
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^([0-9a-fA-F]{40}|[0-9a-fA-F]{64})$",
+      "description": "The full git commit id the declared contracts correspond to."
+    }
+  },
+  "$defs": {
+    "httpsUrl": {
+      "type": "string",
+      "maxLength": 500,
+      "pattern": "^[hH][tT][tT][pP][sS]://[A-Za-z0-9.-]+\\.[A-Za-z0-9-]+\\.?(:[0-9]{1,5})?([/?#][!-\\[\\]-~]*)?$",
+      "not": {
+        "anyOf": [
+          {
+            "pattern": "^[^/]*//[0-9.]+\\.?(:[0-9]+)?([/?#]|$)",
+            "description": "IP-literal host"
+          },
+          {
+            "pattern": "^[^/]*//([^/?#]*\\.)?([lL][oO][cC][aA][lL][hH][oO][sS][tT])\\.?(:[0-9]+)?([/?#]|$)",
+            "description": "localhost"
+          },
+          {
+            "pattern": "^[^/]*//[^/?#]*\\.([lL][oO][cC][aA][lL]|[iI][nN][tT][eE][rR][nN][aA][lL]|[lL][aA][nN]|[iI][nN][tT][rR][aA][nN][eE][tT]|[hH][oO][mM][eE]\\.[aA][rR][pP][aA])\\.?(:[0-9]+)?([/?#]|$)",
+            "description": "local or internal name"
+          },
+          {
+            "pattern": "^[^/]*//([^/?#]*\\.)?[xX][nN]--",
+            "description": "internationalised (punycode) host"
+          }
+        ]
+      },
+      "description": "An absolute https: URL to a public host name. No other scheme, no credentials, no IP literal, no local or internationalised host, at most 500 characters."
+    },
+    "address": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$",
+      "description": "An EVM address: 0x and 40 hexadecimal characters. A mixed-case address must carry a valid EIP-55 checksum (checked by the validator)."
+    },
+    "txHash": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{64}$",
+      "description": "A transaction hash: 0x and 64 hexadecimal characters."
+    },
+    "contractType": {
+      "enum": ["token", "protocol", "factory", "router", "pool", "vault", "nft", "other"],
+      "description": "The role the project gives the contract."
+    },
+    "contract": {
+      "type": "object",
+      "required": ["address", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/address"
+            },
+            {
+              "not": {
+                "pattern": "^0x(0{40}|0{36}[dD][eE][aA][dD])$"
+              }
+            }
+          ],
+          "description": "The contract address. The zero and dead addresses are never a contract identity."
+        },
+        "type": {
+          "$ref": "#/$defs/contractType"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^\\S(.*\\S)?$",
+          "description": "A short label for the contract."
+        },
+        "deployer": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/address"
+            },
+            {
+              "not": {
+                "pattern": "^0x(0{40}|0{36}[dD][eE][aA][dD])$"
+              }
+            }
+          ],
+          "description": "The address the project says deployed this contract. A declaration HEY can check on chain; never a label for a person."
+        },
+        "deploymentTx": {
+          "$ref": "#/$defs/txHash",
+          "description": "The transaction the project says created this contract."
+        }
+      }
+    }
+  }
+}
