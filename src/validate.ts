@@ -4,8 +4,9 @@ import { DECLARATION_STATE, LIMITS } from './constants.js';
 import { findDuplicates } from './duplicates.js';
 import { issue, isManifestIssueCode, type ManifestIssue } from './issues.js';
 import { isRollingTag } from './rolling-tag.js';
-import { manifestFieldsSchema } from './schema.js';
+import { manifestFieldsSchema, RELEASE_RE } from './schema.js';
 import type { HeyProjectManifest, ManifestValidation } from './types.js';
+import { describe } from './text.js';
 import { checkAuthoredUrl, comparableHost } from './url.js';
 
 export type ValidateOptions = {
@@ -71,8 +72,8 @@ function fromZodIssue(zodIssue: z.ZodIssue): ManifestIssue[] {
           'unknown_field',
           [...path, key],
           CHAIN_LIKE_KEYS.has(key) && path.length === 0
-            ? `"${key}" is not part of v1: a manifest declares Robinhood Chain (chainId 4663) only.`
-            : `"${key}" is not a v1 manifest field.`,
+            ? `${describe(key)} is not part of v1: a manifest declares Robinhood Chain (chainId 4663) only.`
+            : `${describe(key)} is not a v1 manifest field.`,
         ),
       );
     case 'too_big':
@@ -91,7 +92,11 @@ function warnings(value: unknown, options: ValidateOptions): ManifestIssue[] {
   const raw = value as Record<string, unknown>;
   const found: ManifestIssue[] = [];
 
-  if (typeof raw.release === 'string' && isRollingTag(raw.release)) {
+  if (
+    typeof raw.release === 'string' &&
+    RELEASE_RE.test(raw.release) &&
+    isRollingTag(raw.release)
+  ) {
     found.push(
       issue(
         'rolling_release_tag',
@@ -160,6 +165,17 @@ export function validateManifest(
   return result(issues, parsed.success ? (parsed.data as HeyProjectManifest) : undefined);
 }
 
+/** The result for a document over the size limit, without reading it. */
+export function tooLargeResult(size: number): ManifestValidation {
+  return result([
+    issue(
+      'too_large',
+      [],
+      `The manifest is ${size} bytes or more; the limit is ${LIMITS.maxBytes}.`,
+    ),
+  ]);
+}
+
 const utf8 = new TextDecoder('utf-8', { fatal: true });
 
 const byteLength = (text: string): number => new TextEncoder().encode(text).length;
@@ -175,9 +191,7 @@ export function parseManifest(
 ): ManifestValidation {
   const size = typeof input === 'string' ? byteLength(input) : input.byteLength;
   if (size > LIMITS.maxBytes) {
-    return result([
-      issue('too_large', [], `The manifest is ${size} bytes; the limit is ${LIMITS.maxBytes}.`),
-    ]);
+    return tooLargeResult(size);
   }
   let text: string;
   if (typeof input === 'string') {

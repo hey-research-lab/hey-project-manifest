@@ -12,6 +12,7 @@ import {
 import { DEAD_ADDRESS, isAddress, isTxHash, ZERO_ADDRESS } from './evm.js';
 import type { ManifestIssueCode } from './issues.js';
 import { findDuplicates } from './duplicates.js';
+import { describe } from './text.js';
 import type { HeyProjectContract, HeyProjectManifest } from './types.js';
 import { checkAuthoredUrl, checkRepositoryUrl, checkXProfileUrl } from './url.js';
 
@@ -174,7 +175,7 @@ const version = z.unknown().transform((value, ctx): 1 => {
       message:
         value === undefined
           ? 'version is required.'
-          : `Unsupported manifest version ${JSON.stringify(value)}; this package reads version 1.`,
+          : `Unsupported manifest version ${describe(value)}; this package reads version 1.`,
       params: { code: value === undefined ? 'missing_field' : 'unsupported_version' },
     });
     return z.NEVER;
@@ -189,7 +190,7 @@ const chainId = z.unknown().transform((value, ctx): 4663 => {
       message:
         value === undefined
           ? 'chainId is required (4663, Robinhood Chain).'
-          : `HEY supports Robinhood Chain (4663) only; chain ${JSON.stringify(value)} is not supported.`,
+          : `HEY supports Robinhood Chain (4663) only; chain ${describe(value)} is not supported.`,
       params: { code: value === undefined ? 'missing_field' : 'unsupported_chain' },
     });
     return z.NEVER;
