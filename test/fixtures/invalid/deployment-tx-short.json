@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://example.com",
+  "chainId": 4663,
+  "contracts": [
+    {
+      "address": "0x0000000000000000000000000000000000000001",
+      "type": "token",
+      "deploymentTx": "0x1234"
+    }
+  ]
+}

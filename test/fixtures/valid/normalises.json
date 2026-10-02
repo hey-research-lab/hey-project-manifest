@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://Example.COM:443/#top",
+  "chainId": 4663,
+  "repositories": [
+    "https://github.com/Example/Protocol.git",
+    "https://www.github.com/example/sdk/"
+  ],
+  "contracts": [
+    {
+      "address": "0xdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB",
+      "type": "token",
+      "deploymentTx": "0xABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB"
+    }
+  ],
+  "officialX": "https://twitter.com/Example?s=21",
+  "commit": "0123456789ABCDEF0123456789ABCDEF01234567"
+}

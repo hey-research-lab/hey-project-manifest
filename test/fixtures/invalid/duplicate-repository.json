@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://example.com",
+  "chainId": 4663,
+  "repositories": [
+    "https://github.com/example/protocol",
+    "https://github.com/Example/Protocol.git/"
+  ]
+}

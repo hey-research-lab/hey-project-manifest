@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "javascript:alert(1)",
+  "chainId": 4663
+}

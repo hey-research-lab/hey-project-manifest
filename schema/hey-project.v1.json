@@ -43,10 +43,12 @@
             "anyOf": [
               {
                 "not": {
+                  "type": "string",
                   "pattern": "^[hH][tT][tT][pP][sS]://([wW][wW][wW]\\.)?[gG][iI][tT][hH][uU][bB]\\.[cC][oO][mM]\\.?(:[0-9]+)?([/?#]|$)"
                 }
               },
               {
+                "type": "string",
                 "pattern": "^[hH][tT][tT][pP][sS]://([wW][wW][wW]\\.)?[gG][iI][tT][hH][uU][bB]\\.[cC][oO][mM]/[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}/?$"
               }
             ]
@@ -106,18 +108,22 @@
       "not": {
         "anyOf": [
           {
+            "type": "string",
             "pattern": "^[^/]*//[0-9.]+\\.?(:[0-9]+)?([/?#]|$)",
             "description": "IP-literal host"
           },
           {
+            "type": "string",
             "pattern": "^[^/]*//([^/?#]*\\.)?([lL][oO][cC][aA][lL][hH][oO][sS][tT])\\.?(:[0-9]+)?([/?#]|$)",
             "description": "localhost"
           },
           {
+            "type": "string",
             "pattern": "^[^/]*//[^/?#]*\\.([lL][oO][cC][aA][lL]|[iI][nN][tT][eE][rR][nN][aA][lL]|[lL][aA][nN]|[iI][nN][tT][rR][aA][nN][eE][tT]|[hH][oO][mM][eE]\\.[aA][rR][pP][aA])\\.?(:[0-9]+)?([/?#]|$)",
             "description": "local or internal name"
           },
           {
+            "type": "string",
             "pattern": "^[^/]*//([^/?#]*\\.)?[xX][nN]--",
             "description": "internationalised (punycode) host"
           }
@@ -151,6 +157,7 @@
             },
             {
               "not": {
+                "type": "string",
                 "pattern": "^0x(0{40}|0{36}[dD][eE][aA][dD])$"
               }
             }
@@ -174,6 +181,7 @@
             },
             {
               "not": {
+                "type": "string",
                 "pattern": "^0x(0{40}|0{36}[dD][eE][aA][dD])$"
               }
             }

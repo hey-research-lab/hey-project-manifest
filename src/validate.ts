@@ -21,23 +21,35 @@ export type ValidateOptions = {
 /** Keys that could reach an object's prototype if a consumer merged the document carelessly. */
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
+type Node = { value: unknown; key: string | number | null; parent: Node | null };
+
+const pathOf = (node: Node): (string | number)[] => {
+  const path: (string | number)[] = [];
+  for (let current: Node | null = node; current && current.key !== null; current = current.parent) {
+    path.unshift(current.key);
+  }
+  return path;
+};
+
 function findForbiddenKeys(root: unknown): ManifestIssue[] {
   const found: ManifestIssue[] = [];
-  // Iterative, so a deeply nested document cannot exhaust the stack.
-  const stack: { value: unknown; path: (string | number)[] }[] = [{ value: root, path: [] }];
+  // Iterative with parent links, so a deeply nested document costs linear time and no stack.
+  const stack: Node[] = [{ value: root, key: null, parent: null }];
   while (stack.length > 0) {
-    const { value, path } = stack.pop() as { value: unknown; path: (string | number)[] };
+    const node = stack.pop() as Node;
+    const { value } = node;
     if (value === null || typeof value !== 'object') continue;
     if (Array.isArray(value)) {
-      value.forEach((item, index) => stack.push({ value: item, path: [...path, index] }));
+      value.forEach((item, index) => stack.push({ value: item, key: index, parent: node }));
       continue;
     }
     for (const key of Object.keys(value)) {
+      const child: Node = { value: (value as Record<string, unknown>)[key], key, parent: node };
       if (FORBIDDEN_KEYS.has(key)) {
-        found.push(issue('forbidden_key', [...path, key], `The key "${key}" is not allowed.`));
+        found.push(issue('forbidden_key', pathOf(child), `The key "${key}" is not allowed.`));
         continue;
       }
-      stack.push({ value: (value as Record<string, unknown>)[key], path: [...path, key] });
+      stack.push(child);
     }
   }
   return found;

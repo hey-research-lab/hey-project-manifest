@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/hey-research-lab/hey-project-manifest/main/schema/hey-project.v1.json",
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://example.com",
+  "chainId": 4663,
+  "repositories": [
+    "https://github.com/example/protocol",
+    "https://github.com/example/contracts",
+    "https://gitlab.com/example/indexer"
+  ],
+  "contracts": [
+    {
+      "address": "0x0000000000000000000000000000000000000001",
+      "type": "token",
+      "name": "EXP token",
+      "deployer": "0x0000000000000000000000000000000000000003",
+      "deploymentTx": "0xabababababababababababababababababababababababababababababababab"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000002",
+      "type": "factory",
+      "name": "Pool factory"
+    },
+    {
+      "address": "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
+      "type": "router"
+    },
+    {
+      "address": "0xFB6916095CA1DF60BB79CE92CE3EA74C37C5D359",
+      "type": "pool"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000004",
+      "type": "vault"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000005",
+      "type": "nft"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000006",
+      "type": "protocol"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000007",
+      "type": "other",
+      "name": "Fee splitter"
+    }
+  ],
+  "documentation": "https://docs.example.com/",
+  "changelog": "https://example.com/changelog",
+  "feed": "https://example.com/feed.xml",
+  "officialX": "https://x.com/example",
+  "logo": "https://example.com/logo.png",
+  "release": "v1.2.0",
+  "commit": "0123456789abcdef0123456789abcdef01234567"
+}

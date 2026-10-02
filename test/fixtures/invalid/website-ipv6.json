@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://[2001:db8::1]/",
+  "chainId": 4663
+}

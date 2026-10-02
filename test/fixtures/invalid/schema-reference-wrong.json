@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://example.com",
+  "chainId": 4663,
+  "$schema": "https://example.com/other-schema.json"
+}

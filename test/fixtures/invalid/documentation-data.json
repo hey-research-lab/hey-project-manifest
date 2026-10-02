@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "name": "Example Protocol",
+  "website": "https://example.com",
+  "chainId": 4663,
+  "documentation": "data:text/html,<script>alert(1)</script>"
+}
