@@ -34,7 +34,7 @@ describe('checkAuthoredUrl', () => {
     ['https://exa mple.com', 'invalid_url'],
     ['https://example.com/\u0007', 'invalid_url'],
     ['https://example.com\\@evil.example', 'invalid_url'],
-    ['https://example.com/café', 'invalid_url'],
+    ['https://example.com/caf\u00e9', 'invalid_url'],
     ['https://user@example.com', 'url_credentials'],
     ['https://:pw@example.com', 'url_credentials'],
     ['https://127.0.0.1', 'url_ip_literal'],
@@ -52,7 +52,7 @@ describe('checkAuthoredUrl', () => {
     ['https://router.home.arpa', 'url_local_host'],
     ['https://intranet', 'url_local_host'],
     ['https://xn--80ak6aa92e.com', 'url_idn_host'],
-    ['https://аpple.com', 'url_idn_host'],
+    ['https://\u0430pple.com', 'url_idn_host'],
     [`https://example.com/${'a'.repeat(500)}`, 'url_too_long'],
   ])('refuses %s with %s', (input, expected) => {
     expect(code(input)).toBe(expected);

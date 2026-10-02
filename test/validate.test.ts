@@ -317,7 +317,7 @@ describe('robustness', () => {
   });
 
   it('accepts a leading byte-order mark', () => {
-    const text = `﻿${readFixture('valid', 'brief-shape.json')}`;
+    const text = `\ufeff${readFixture('valid', 'brief-shape.json')}`;
     expect(parseManifest(text).valid).toBe(true);
   });
 
@@ -334,13 +334,14 @@ describe('robustness', () => {
   });
 
   it('escapes untrusted keys in messages', () => {
-    const key = 'evil\u001b[31m‮';
+    const key = 'evil\u001b[31m\u202e';
     const [found] = validateManifest({
       ...(fixtureJson('valid', 'minimal.json') as object),
       [key]: 1,
     }).issues;
     expect(found?.code).toBe('unknown_field');
-    expect(found?.message).not.toMatch(/[\u001b‮]/);
+    // eslint-disable-next-line no-control-regex
+    expect(found?.message).not.toMatch(/[\u001b\u202e]/);
   });
 
   it('every reported code is a documented code with its documented severity', () => {
@@ -371,7 +372,8 @@ describe('the exported zod schema', () => {
     }
     const chain = heyProjectManifestSchema.safeParse(fixtureJson('invalid', 'chain-ethereum.json'));
     expect(chain.success).toBe(false);
-    if (!chain.success)
-      expect(chain.error.issues[0]?.params).toEqual({ code: 'unsupported_chain' });
+    if (!chain.success) {
+      expect(chain.error.issues[0]).toMatchObject({ params: { code: 'unsupported_chain' } });
+    }
   });
 });
