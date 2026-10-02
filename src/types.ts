@@ -50,13 +50,22 @@ export type DeclarationState = typeof DECLARATION_STATE;
  * `DECLARED` and `verified` is always `false`: a valid manifest is
  * well-formed, not true.
  */
-export type ManifestValidation = {
-  valid: boolean;
+type ManifestValidationBase = {
   declarationState: DeclarationState;
   verified: false;
-  /** The normalised manifest, present only when `valid` is true. */
-  manifest?: HeyProjectManifest;
   issues: ManifestIssue[];
   errorCount: number;
   warningCount: number;
 };
+
+/**
+ * Narrow on `valid`: `if (result.valid) result.manifest` is typed without a
+ * non-null assertion (0.1.1). The JSON shape is unchanged.
+ */
+export type ManifestValidation =
+  | (ManifestValidationBase & {
+      valid: true;
+      /** The normalised manifest. */
+      manifest: HeyProjectManifest;
+    })
+  | (ManifestValidationBase & { valid: false; manifest?: undefined });

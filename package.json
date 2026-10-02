@@ -1,6 +1,6 @@
 {
   "name": "@hey-research-lab/project-manifest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A machine-readable declaration format (/.well-known/hey-project.json) for Robinhood Chain projects: JSON Schema, TypeScript types, validator and CLI. Declared, not verified.",
   "license": "MIT",
   "author": "HEY Research Lab",

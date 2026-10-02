@@ -301,7 +301,7 @@ describe('usage', () => {
   it('prints the version', async () => {
     const t = io();
     expect(await run(['--version'], t.world)).toBe(0);
-    expect(t.stdout()).toBe('0.1.0\n');
+    expect(t.stdout()).toBe('0.1.1\n');
   });
 
   it('prints help with exit 0, and help on stderr with exit 2 when no command is given', async () => {

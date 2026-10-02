@@ -5,6 +5,11 @@ All notable changes to this package are documented here. The format follows
 [Semantic Versioning](https://semver.org/). The manifest format has its own version (`version: 1`),
 independent of the package version.
 
+## 0.1.1 — 2026-10-02
+
+- `ManifestValidation` is a union narrowed on `valid`: `if (result.valid) result.manifest.contracts` compiles under strict TypeScript, as the README shows. The JSON shape is unchanged.
+- Issue templates (bug, idea) with private security reporting and HEY corrections linked.
+
 ## 0.1.0 — 2026-10-02
 
 Initial release.

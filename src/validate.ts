@@ -146,16 +146,26 @@ function warnings(value: unknown, options: ValidateOptions): ManifestIssue[] {
 
 function result(issues: ManifestIssue[], manifest?: HeyProjectManifest): ManifestValidation {
   const errorCount = issues.filter((found) => found.severity === 'error').length;
-  const valid = errorCount === 0 && manifest !== undefined;
-  return {
-    valid,
-    declarationState: DECLARATION_STATE,
-    verified: false,
-    ...(valid ? { manifest } : {}),
-    issues,
-    errorCount,
-    warningCount: issues.length - errorCount,
-  };
+  const warningCount = issues.length - errorCount;
+  // Key order is the published JSON's: valid, declarationState, verified, manifest, issues, counts.
+  return errorCount === 0 && manifest !== undefined
+    ? {
+        valid: true,
+        declarationState: DECLARATION_STATE,
+        verified: false,
+        manifest,
+        issues,
+        errorCount,
+        warningCount,
+      }
+    : {
+        valid: false,
+        declarationState: DECLARATION_STATE,
+        verified: false,
+        issues,
+        errorCount,
+        warningCount,
+      };
 }
 
 /**
