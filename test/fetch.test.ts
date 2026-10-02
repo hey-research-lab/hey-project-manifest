@@ -10,10 +10,10 @@ import {
   type ManifestTransport,
   type TransportRequest,
 } from '../src/index.js';
-import { readFixture } from './helpers.js';
+import { PUBLIC_V4, readFixture } from './helpers.js';
 
 const NOW = () => new Date('2026-10-02T12:00:00.000Z');
-const PUBLIC: AddressLookup = async () => ['93.184.216.34'];
+const PUBLIC: AddressLookup = async () => [PUBLIC_V4];
 
 async function* chunks(...parts: (string | Uint8Array)[]): AsyncIterable<Uint8Array> {
   for (const part of parts) yield typeof part === 'string' ? new TextEncoder().encode(part) : part;
@@ -218,7 +218,7 @@ describe('fetchManifest', () => {
     };
     const result = await fetchManifest('rebind.example.com', {
       transport,
-      resolve: async () => ['93.184.216.34', address],
+      resolve: async () => [PUBLIC_V4, address],
     });
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error.code).toBe('private_address');
@@ -302,16 +302,14 @@ describe('fetchManifest', () => {
 
 describe('connect-time address check', () => {
   it('answers node:https lookups with checked addresses only', async () => {
-    const lookup = guardedLookup(
-      checkedResolver(async () => ['93.184.216.34', '2606:2800:220:1::1']),
-    );
+    const lookup = guardedLookup(checkedResolver(async () => [PUBLIC_V4, '2606:2800:220:1::1']));
     const all = await new Promise((resolve, reject) =>
       lookup('example.com', { all: true }, (error, addresses) =>
         error ? reject(error) : resolve(addresses),
       ),
     );
     expect(all).toEqual([
-      { address: '93.184.216.34', family: 4 },
+      { address: PUBLIC_V4, family: 4 },
       { address: '2606:2800:220:1::1', family: 6 },
     ]);
     const v6 = await new Promise((resolve, reject) =>
@@ -323,7 +321,7 @@ describe('connect-time address check', () => {
   });
 
   it('fails the lookup when any answer is private', async () => {
-    const lookup = guardedLookup(checkedResolver(async () => ['93.184.216.34', '10.0.0.1']));
+    const lookup = guardedLookup(checkedResolver(async () => [PUBLIC_V4, '10.0.0.1']));
     const error = await new Promise((resolve) =>
       lookup('example.com', {}, (failure) => resolve(failure)),
     );

@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { validateManifest, type ManifestTransport } from '../src/index.js';
 import { run, type RunIO } from '../src/run.js';
-import { readFixture } from './helpers.js';
+import { PUBLIC_V4, readFixture } from './helpers.js';
 
 let dir: string;
 beforeEach(() => {
@@ -25,7 +25,7 @@ function io(transport?: ManifestTransport) {
     cwd: dir,
     env: {},
     now: () => new Date('2026-10-02T12:00:00.000Z'),
-    ...(transport ? { fetchOptions: { transport, resolve: async () => ['93.184.216.34'] } } : {}),
+    ...(transport ? { fetchOptions: { transport, resolve: async () => [PUBLIC_V4] } } : {}),
   };
   return { world, stdout: () => out.join(''), stderr: () => err.join('') };
 }

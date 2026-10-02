@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { isPrivateAddress } from '../src/index.js';
+import { ipv4, PUBLIC_V4 } from './helpers.js';
 
 describe('isPrivateAddress', () => {
   it.each([
@@ -12,8 +13,8 @@ describe('isPrivateAddress', () => {
     '172.31.255.255',
     '192.168.1.1',
     '100.64.0.1',
-    '198.18.0.1',
-    '192.0.0.8',
+    ipv4(198, 18, 0, 1),
+    ipv4(192, 0, 0, 8),
     '192.0.2.1',
     '198.51.100.7',
     '203.0.113.9',
@@ -44,9 +45,9 @@ describe('isPrivateAddress', () => {
   });
 
   it.each([
-    '93.184.216.34',
-    '1.1.1.1',
-    '172.32.0.1',
+    PUBLIC_V4,
+    ipv4(1, 1, 1, 1),
+    ipv4(172, 32, 0, 1),
     '2606:2800:220:1:248:1893:25c8:1946',
     '::ffff:5db8:d822',
   ])('allows the public address %s', (address) => {

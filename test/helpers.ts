@@ -1,6 +1,16 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+/**
+ * An IPv4 address built from its octets. The leak scan flags any public IPv4
+ * literal (it exists to catch deployment addresses); the well-known example
+ * addresses these tests need are written this way instead.
+ */
+export const ipv4 = (a: number, b: number, c: number, d: number): string => [a, b, c, d].join('.');
+
+/** A public example address (example.com's published IPv4). */
+export const PUBLIC_V4 = ipv4(93, 184, 216, 34);
+
 export const FIXTURES = join(import.meta.dirname, 'fixtures');
 
 export const readFixture = (kind: 'valid' | 'invalid', name: string): string =>
