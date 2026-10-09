@@ -63,7 +63,8 @@ That writes, and then validates:
 ```
 
 Publish it so that `https://<your domain>/.well-known/hey-project.json` answers `200` with that
-JSON — directly, without a redirect.
+JSON — directly, without a redirect. HEY Research Lab serves its own as a working reference:
+https://heyresearch.xyz/.well-known/hey-project.json (`npx hey-project inspect https://heyresearch.xyz`).
 
 From code:
 

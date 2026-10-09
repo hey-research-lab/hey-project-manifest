@@ -5,6 +5,16 @@ All notable changes to this package are documented here. The format follows
 [Semantic Versioning](https://semver.org/). The manifest format has its own version (`version: 1`),
 independent of the package version.
 
+## 0.1.2 — 2026-10-09
+
+- `isRollingTag` and the `rolling_release_tag` warning follow HEY's rule as of 2026-10-09: a CI
+  build stamp — a word stem, a run number and an attempt (`server-image-1234-1`, `docker_412_2`),
+  or `build`/`ci` straight before a number (`build-123`, `ci-456`) — is rolling too. Versions near
+  that shape (`release-12-1`, `release-2024-10`, `app-1-4`, `v1.2.3-build-45`) are not. A warning
+  only: no manifest that was valid becomes invalid.
+- The README points at HEY's own manifest, https://heyresearch.xyz/.well-known/hey-project.json, as
+  a working reference; it validates with no error and no warning.
+
 ## 0.1.1 — 2026-10-02
 
 - `ManifestValidation` is a union narrowed on `valid`: `if (result.valid) result.manifest.contracts` compiles under strict TypeScript, as the README shows. The JSON shape is unchanged.

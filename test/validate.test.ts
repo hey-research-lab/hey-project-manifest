@@ -4,6 +4,7 @@ import {
   CONTRACT_TYPES,
   heyProjectManifestSchema,
   ISSUE_CODES,
+  isRollingTag,
   LIMITS,
   parseManifest,
   validateManifest,
@@ -280,6 +281,51 @@ describe('rules', () => {
     }
     for (const release of ['v1.2.0', 'v1.2.0-dev.3', 'v2026.10.01', 'docs-latest']) {
       expect(codes(withFields({ release }))).not.toContain('rolling_release_tag');
+    }
+  });
+
+  it('treats CI build stamps as rolling, as HEY does since 2026-10-08, and keeps versions', () => {
+    for (const release of [
+      'server-image-1234-1',
+      'server-image-37636365152-1',
+      'Server-Image-1201-3',
+      'docker_412_2',
+      'web-app-77-1',
+      'build-123',
+      'ci-456',
+      'BUILD-9',
+      'build.45',
+      'ci12',
+      'server-build-77',
+      'build-123-1',
+      'ci-build-5',
+    ]) {
+      expect(isRollingTag(release), release).toBe(true);
+    }
+    for (const release of [
+      'v1.2.3',
+      '1.2.3-rc.1',
+      'release-2024-10',
+      'server-v2.3.0',
+      'app-1.4.0',
+      'app-1-4',
+      'sdk-1-4-0',
+      'release-12-1',
+      'rc-10-2',
+      'beta_11_3',
+      'v-12-1',
+      'snapshot-2026-1',
+      'server-image-2026-10',
+      'server-v2-3-0',
+      'v1.2.3-build-45',
+      '1.2.3+build.45',
+      'builder-12',
+      'buildkit-12',
+      'cinema-12',
+      'server-image-1234',
+      'image-12-1-0',
+    ]) {
+      expect(isRollingTag(release), release).toBe(false);
     }
   });
 

@@ -148,7 +148,9 @@ display the EIP-55 form.
 
 1–128 characters: a letter or digit, then letters, digits, `.`, `_`, `+`, `-` or `/`, without `..`.
 A rolling or automated tag — `latest*`, `nightly*`, `*-debug`, exactly `edge`, `canary`, `dev` or
-`snapshot`, a data word before a date (`data-2026-10-01`) or a date-and-hash build stamp — raises
+`snapshot`, a data word before a date (`data-2026-10-01`), a date-and-hash build stamp, or a CI build
+stamp (`server-image-1234-1`, `build-123`, `ci-456`; not `release-12-1`, `release-2024-10` or
+`app-1-4`) — raises
 the warning `rolling_release_tag`: HEY never counts such a tag as a release, and it does not pin the
 declared contracts to a build anyone can find again.
 

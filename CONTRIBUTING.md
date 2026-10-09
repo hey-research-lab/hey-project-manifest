@@ -36,7 +36,8 @@ Node 22 is used for development and CI; the published library supports Node 18 a
 ## Maintainers: parity
 
 This repository is new (not extracted). The pieces it shares with HEY Research Lab's production
-contract were taken from it at `21775391f6c0fb4494575e0b4463df535c65cb96` and must stay in step:
+contract were taken from it on 2026-10-02 and were last brought in step with production as of
+2026-10-09:
 
 - `src/chain.ts` and `src/evm.ts` are the ecosystem's shared chain and EVM helpers, identical in
   every HEY ecosystem repository (chain id `4663`, `eip155:4663`, the explorer, the
@@ -44,11 +45,12 @@ contract were taken from it at `21775391f6c0fb4494575e0b4463df535c65cb96` and mu
 - `src/ip.ts` classifies refused addresses with the same ranges as the public URL-safety guard in
   `hey-research-lab/hey-research-open` (`packages/sources/src/http/url-safety.ts`).
 - `src/rolling-tag.ts` restates HEY's rolling-tag rule (prefixes, suffixes, exact words, data-date
-  and build-stamp tags) as production applies it at that commit. Here it only raises a warning.
+  and build-stamp tags, and since 2026-10-08 CI build stamps) as production applies it. Here it
+  only raises a warning.
 - `CLAIM_CHALLENGE_PATH` (`/.well-known/hey-research.txt`) names HEY's ownership-claim challenge
   file, which this format must never replace.
 
-When production changes any of these, update this repository and the commit above together.
+When production changes any of these, update this repository and the date above together.
 
 ## Releasing
 
