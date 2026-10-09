@@ -5,6 +5,11 @@ All notable changes to this package are documented here. The format follows
 [Semantic Versioning](https://semver.org/). The manifest format has its own version (`version: 1`),
 independent of the package version.
 
+## Unreleased
+
+- Development: vitest 4.1.11 / tsup 8.5.1, with esbuild held at ^0.28.1 by a pnpm override; clears
+  dev-only advisories in the test and build toolchain. No runtime change.
+
 ## 0.1.2 — 2026-10-09
 
 - `isRollingTag` and the `rolling_release_tag` warning follow HEY's rule as of 2026-10-09: a CI
