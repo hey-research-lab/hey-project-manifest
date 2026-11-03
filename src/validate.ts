@@ -57,27 +57,45 @@ function findForbiddenKeys(root: unknown): ManifestIssue[] {
 
 const CHAIN_LIKE_KEYS = new Set(['chains', 'chain', 'network', 'networks', 'rpc', 'rpcUrl']);
 
-function fromZodIssue(zodIssue: z.ZodIssue): ManifestIssue[] {
-  const path = zodIssue.path;
+/** The value at `path` in the document zod was given, or undefined when a key on the way is missing. */
+function valueAt(root: unknown, path: readonly (string | number)[]): unknown {
+  let current: unknown = root;
+  for (const key of path) {
+    if (current === null || typeof current !== 'object' || !Object.hasOwn(current, key)) {
+      return undefined;
+    }
+    current = (current as Record<string | number, unknown>)[key];
+  }
+  return current;
+}
+
+/** The type names zod 3 printed as `received`, so messages stay the same across zod majors. */
+function typeName(value: unknown): string {
+  if (value === undefined) return 'undefined';
+  if (value === null) return 'null';
+  if (Array.isArray(value)) return 'array';
+  if (typeof value === 'number') return Number.isNaN(value) ? 'nan' : 'number';
+  return typeof value;
+}
+
+function fromZodIssue(zodIssue: z.core.$ZodIssue, root: unknown): ManifestIssue[] {
+  // zod 4 types a path segment as PropertyKey; manifests are JSON, so no segment is a symbol.
+  const path = zodIssue.path.map((part) => (typeof part === 'symbol' ? String(part) : part));
   switch (zodIssue.code) {
     case 'custom': {
       const code: unknown = zodIssue.params?.code;
       return [issue(isManifestIssueCode(code) ? code : 'invalid_type', path, zodIssue.message)];
     }
-    case 'invalid_type':
+    case 'invalid_type': {
       if (path.length === 0) {
         return [issue('not_an_object', path, 'A manifest is a JSON object.')];
       }
-      if (zodIssue.received === 'undefined') {
+      const received = typeName(valueAt(root, path));
+      if (received === 'undefined') {
         return [issue('missing_field', path, `${String(path[path.length - 1])} is required.`)];
       }
-      return [
-        issue(
-          'invalid_type',
-          path,
-          `Expected ${zodIssue.expected}, received ${zodIssue.received}.`,
-        ),
-      ];
+      return [issue('invalid_type', path, `Expected ${zodIssue.expected}, received ${received}.`)];
+    }
     case 'unrecognized_keys':
       return zodIssue.keys.map((key) =>
         issue(
@@ -90,7 +108,7 @@ function fromZodIssue(zodIssue: z.ZodIssue): ManifestIssue[] {
       );
     case 'too_big':
       return [
-        zodIssue.type === 'array'
+        zodIssue.origin === 'array'
           ? issue('too_many_items', path, `At most ${String(zodIssue.maximum)} items.`)
           : issue('invalid_text', path, zodIssue.message),
       ];
@@ -181,7 +199,9 @@ export function validateManifest(
   if (forbidden.length > 0) return result(forbidden);
 
   const parsed = manifestFieldsSchema.safeParse(value);
-  const issues: ManifestIssue[] = parsed.success ? [] : parsed.error.issues.flatMap(fromZodIssue);
+  const issues: ManifestIssue[] = parsed.success
+    ? []
+    : parsed.error.issues.flatMap((found) => fromZodIssue(found, value));
   issues.push(...findDuplicates(value));
   issues.push(...warnings(value, options));
   return result(issues, parsed.success ? (parsed.data as HeyProjectManifest) : undefined);

@@ -5,8 +5,13 @@ All notable changes to this package are documented here. The format follows
 [Semantic Versioning](https://semver.org/). The manifest format has its own version (`version: 1`),
 independent of the package version.
 
-## Unreleased
+## 0.2.0 — unreleased (not yet on npm)
 
+- Security: `zod` moves from `^3.24.1` to `^4.6.7` (GHSA-mrhx-c7xc-m3w5, memory exhaustion on large
+  arrays, fixed only in 4.6.6). `heyProjectManifestSchema` and `contractSchema` are zod 4 schemas now
+  (`z.ZodType<Output, Input>`), hence the minor bump. Issue codes, pointers and messages are unchanged;
+  the manifest format stays `version: 1`.
+- Development: vitest 4.1.12.
 - Development: vitest 4.1.11 / tsup 8.5.1, with esbuild held at ^0.28.1 by a pnpm override; clears
   dev-only advisories in the test and build toolchain. No runtime change.
 

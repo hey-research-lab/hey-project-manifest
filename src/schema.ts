@@ -208,7 +208,7 @@ const schemaReference = coded<typeof SCHEMA_ID>((value) =>
       },
 );
 
-export const contractSchema: z.ZodType<HeyProjectContract, z.ZodTypeDef, unknown> = z
+export const contractSchema: z.ZodType<HeyProjectContract, unknown> = z
   .object({
     address: contractAddress,
     type: contractType,
@@ -243,7 +243,7 @@ export const manifestFieldsSchema = z
  * `validateManifest` applies, for callers who compose zod schemas. Its output
  * is the normalised manifest.
  */
-export const heyProjectManifestSchema: z.ZodType<HeyProjectManifest, z.ZodTypeDef, unknown> =
+export const heyProjectManifestSchema: z.ZodType<HeyProjectManifest, unknown> =
   manifestFieldsSchema.superRefine((value, ctx) => {
     for (const found of findDuplicates(value)) {
       ctx.addIssue({
