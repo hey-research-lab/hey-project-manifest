@@ -5,9 +5,9 @@ declares its name, website, repositories and contracts — with a JSON Schema, T
 validator and the `hey-project` CLI. **Declared, not verified.**
 
 [![CI](https://github.com/hey-research-lab/hey-project-manifest/actions/workflows/ci.yml/badge.svg)](https://github.com/hey-research-lab/hey-project-manifest/actions/workflows/ci.yml)
-[![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
-[![Node](https://img.shields.io/badge/node-%3E%3D18-informational.svg)](package.json)
-[![Robinhood Chain 4663](https://img.shields.io/badge/Robinhood%20Chain-4663-informational.svg)](https://robinhoodchain.blockscout.com)
+[![Licence: MIT](assets/badges/licence-mit.svg)](LICENSE)
+[![Node](assets/badges/node-18.svg)](package.json)
+[![Robinhood Chain 4663](assets/badges/robinhood-chain-4663.svg)](https://robinhoodchain.blockscout.com)
 
 ## Why it exists
 
